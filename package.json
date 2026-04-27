@@ -1,0 +1,74 @@
+{
+  "name": "minio-client",
+  "version": "1.0.0",
+  "description": "Desktop object storage client for MinIO and S3-compatible services",
+  "main": "./out/main/index.js",
+  "author": "MinIO Client Team",
+  "homepage": "https://github.com/your-org/minio-client",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/minio-client.git"
+  },
+  "scripts": {
+    "icons": "python scripts/generate-icons.py",
+    "format": "prettier --write .",
+    "lint": "eslint --cache .",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "npm run icons && npm run typecheck && electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "pack": "npm run build && electron-builder --dir --publish never",
+    "dist": "npm run build && electron-builder --publish never",
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
+    "publish:win": "npm run build && electron-builder --win --publish always"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.2.2",
+    "@aws-sdk/client-s3": "^3.1037.0",
+    "@aws-sdk/s3-request-presigner": "^3.1037.0",
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "ali-oss": "^6.23.0",
+    "antd": "^6.3.7",
+    "cos-nodejs-sdk-v5": "^2.15.4",
+    "dayjs": "^1.11.20",
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.3.9",
+    "filesize": "^11.0.17",
+    "mime-types": "^3.0.2",
+    "minio": "^8.0.7",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@electron-toolkit/eslint-config-ts": "^3.1.0",
+    "@electron-toolkit/tsconfig": "^2.0.0",
+    "@types/node": "^22.19.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "electron": "^39.2.6",
+    "electron-builder": "^26.0.12",
+    "electron-vite": "^5.0.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "prettier": "^3.7.4",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.6"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  }
+}

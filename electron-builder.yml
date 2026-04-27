@@ -1,0 +1,66 @@
+appId: com.minio.client.desktop
+productName: MinIO Client
+copyright: Copyright © 2026 MinIO Client Team
+directories:
+  buildResources: build
+  output: release/${version}
+files:
+  - out/**
+  - resources/**
+  - package.json
+  - '!**/.vscode/*'
+  - '!src/**'
+  - '!scripts/**'
+  - '!build/icons/**'
+  - '!release/**'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+extraMetadata:
+  main: out/main/index.js
+asarUnpack:
+  - resources/**
+win:
+  executableName: MinIO Client
+  icon: build/icon.ico
+  target:
+    - nsis
+    - portable
+nsis:
+  artifactName: ${productName}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  oneClick: false
+  perMachine: false
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
+mac:
+  icon: build/icon.icns
+  category: public.app-category.productivity
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+  notarize: false
+dmg:
+  artifactName: ${productName}-${version}.${ext}
+linux:
+  icon: build/icon.png
+  target:
+    - AppImage
+    - deb
+    - rpm
+  maintainer: MinIO Client Team
+  category: Utility
+appImage:
+  artifactName: ${productName}-${version}.${ext}
+deb:
+  artifactName: ${productName}-${version}.${ext}
+rpm:
+  artifactName: ${productName}-${version}.${ext}
+npmRebuild: false
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/
