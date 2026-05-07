@@ -35,9 +35,9 @@ export function ConnectionList({
       title="连接"
       size="small"
       extra={
-        <Space>
+        <Space size={6}>
           <Tooltip title="刷新连接">
-            <Button aria-label="刷新连接" icon={<ReloadOutlined />} size="small" onClick={onRefresh} />
+            <Button aria-label="刷新连接" icon={<ReloadOutlined />} size="small" type="text" onClick={onRefresh} />
           </Tooltip>
           <Button icon={<PlusOutlined />} size="small" type="primary" onClick={onCreate}>
             新建

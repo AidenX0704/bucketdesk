@@ -13,6 +13,7 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { createReadStream, createWriteStream, statSync } from 'fs'
 import { lookup } from 'mime-types'
+import { Transform } from 'stream'
 import { pipeline } from 'stream/promises'
 import type { BucketInfo } from '../../../shared/types/bucket'
 import type { ConnectionProfile } from '../../../shared/types/connection'
@@ -26,7 +27,7 @@ import type {
   PresignedUrlInput
 } from '../../../shared/types/object'
 import type { CreateDownloadTaskInput, CreateUploadTaskInput } from '../../../shared/types/transfer'
-import type { DownloadObjectOptions } from '../../core/ports/storage-provider'
+import type { DownloadObjectOptions, UploadObjectOptions } from '../../core/ports/storage-provider'
 
 export class S3ClientAdapter {
   createClient(profile: ConnectionProfile): S3Client {
@@ -75,7 +76,7 @@ export class S3ClientAdapter {
       bucket: input.bucket,
       prefix,
       objects: (response.Contents ?? [])
-        .filter((object) => object.Key !== prefix)
+        .filter((object) => object.Key !== prefix && object.Key && !object.Key.endsWith('/'))
         .map((object) => ({
           key: object.Key ?? '',
           size: object.Size ?? 0,
@@ -152,19 +153,47 @@ export class S3ClientAdapter {
     )
   }
 
-  async uploadObject(profile: ConnectionProfile, input: CreateUploadTaskInput): Promise<void> {
-    const stat = statSync(input.localPath)
-    const contentType = lookup(input.localPath) || undefined
-
+  async createFolder(profile: ConnectionProfile, bucket: string, key: string): Promise<void> {
+    const folderKey = key.endsWith('/') ? key : `${key}/`
     await this.createClient(profile).send(
       new PutObjectCommand({
-        Bucket: input.bucket,
-        Key: input.objectKey,
-        Body: createReadStream(input.localPath),
-        ContentLength: stat.size,
-        ContentType: contentType
+        Bucket: bucket,
+        Key: folderKey,
+        Body: Buffer.alloc(0)
       })
     )
+  }
+
+  async uploadObject(profile: ConnectionProfile, input: CreateUploadTaskInput, options?: UploadObjectOptions): Promise<void> {
+    const stat = statSync(input.localPath)
+    const contentType = lookup(input.localPath) || undefined
+    const totalBytes = stat.size
+    let transferredBytes = 0
+
+    const progressStream = new Transform({
+      transform(chunk: Buffer, _encoding, callback) {
+        transferredBytes += chunk.length
+        options?.onProgress?.({ transferredBytes, totalBytes })
+        callback(null, chunk)
+      }
+    })
+
+    const body = createReadStream(input.localPath).pipe(progressStream)
+
+    try {
+      await this.createClient(profile).send(
+        new PutObjectCommand({
+          Bucket: input.bucket,
+          Key: input.objectKey,
+          Body: body,
+          ContentLength: totalBytes,
+          ContentType: contentType
+        }),
+        { abortSignal: options?.signal }
+      )
+    } finally {
+      progressStream.destroy()
+    }
   }
 
   async downloadObject(

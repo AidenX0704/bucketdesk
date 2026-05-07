@@ -6,6 +6,7 @@ import type {
 } from '../types/connection'
 import type {
   CopyObjectInput,
+  CreateFolderInput,
   DeleteObjectInput,
   ListObjectsInput,
   ListObjectsResult,
@@ -44,6 +45,7 @@ export interface StorageApi {
   moveObject(input: MoveObjectInput): Promise<AppResult<void>>
   createPresignedUrl(input: PresignedUrlInput): Promise<AppResult<string>>
   previewObject(input: ObjectPreviewInput): Promise<AppResult<ObjectPreviewResult>>
+  createFolder(input: CreateFolderInput): Promise<AppResult<void>>
 }
 
 export interface TransfersApi {

@@ -81,6 +81,12 @@ export interface ReadObjectResult {
   contentType?: string
 }
 
+export interface CreateFolderInput {
+  connectionId: string
+  bucket: string
+  key: string
+}
+
 export interface ObjectMetadata {
   key: string
   bucket: string

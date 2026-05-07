@@ -1,6 +1,7 @@
 import type { BucketInfo, CreateBucketInput, DeleteBucketInput } from '../../shared/types/bucket'
 import type {
   CopyObjectInput,
+  CreateFolderInput,
   DeleteObjectInput,
   ListObjectsInput,
   ListObjectsResult,
@@ -89,6 +90,11 @@ export class StorageService {
   async createPresignedUrl(input: PresignedUrlInput): Promise<string> {
     const profile = this.connections.getProfile(input.connectionId)
     return this.providers.get(profile.providerType).createPresignedUrl(profile, input)
+  }
+
+  async createFolder(input: CreateFolderInput): Promise<void> {
+    const profile = this.connections.getProfile(input.connectionId)
+    await this.providers.get(profile.providerType).createFolder(profile, input)
   }
 
   async previewObject(input: ObjectPreviewInput): Promise<ObjectPreviewResult> {

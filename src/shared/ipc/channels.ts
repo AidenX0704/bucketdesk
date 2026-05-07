@@ -18,7 +18,8 @@ export const ipcChannels = {
     copy: 'objects:copy',
     move: 'objects:move',
     presignUrl: 'objects:presign-url',
-    preview: 'objects:preview'
+    preview: 'objects:preview',
+    createFolder: 'objects:create-folder'
   },
   transfers: {
     list: 'transfers:list',

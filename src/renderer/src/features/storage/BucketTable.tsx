@@ -86,7 +86,15 @@ export function BucketTable({
   ]
 
   return (
-    <Card title="Bucket 浏览" extra={<Button type="primary" onClick={onCreate}>创建 Bucket</Button>}>
+    <Card
+      title="Bucket 浏览"
+      className="surface-card"
+      extra={
+        <Button type="primary" onClick={onCreate}>
+          创建 Bucket
+        </Button>
+      }
+    >
       {hasConnection ? (
         <Table
           rowKey="name"

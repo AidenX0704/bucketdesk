@@ -2,6 +2,7 @@ import type { BucketInfo, CreateBucketInput, DeleteBucketInput } from '../../sha
 import type { ConnectionProfile } from '../../shared/types/connection'
 import type {
   CopyObjectInput,
+  CreateFolderInput,
   DeleteObjectInput,
   ListObjectsInput,
   ListObjectsResult,
@@ -16,7 +17,7 @@ import type {
   TestConnectionResult
 } from '../../shared/types/provider'
 import type { StorageProvider } from '../core/ports/storage-provider'
-import type { DownloadObjectOptions } from '../core/ports/storage-provider'
+import type { DownloadObjectOptions, UploadObjectOptions } from '../core/ports/storage-provider'
 
 const defaultCapabilities: ProviderCapabilities = {
   multipartUpload: true,
@@ -97,8 +98,12 @@ export abstract class ProviderBase implements StorageProvider {
     throw new Error(`${this.descriptor.name} presigned url is not implemented`)
   }
 
-  async uploadObject(_profile: ConnectionProfile, _input: CreateUploadTaskInput): Promise<void> {
+  async uploadObject(_profile: ConnectionProfile, _input: CreateUploadTaskInput, _options?: UploadObjectOptions): Promise<void> {
     throw new Error(`${this.descriptor.name} upload is not implemented`)
+  }
+
+  async createFolder(_profile: ConnectionProfile, _input: CreateFolderInput): Promise<void> {
+    throw new Error(`${this.descriptor.name} create folder is not implemented`)
   }
 
   async downloadObject(

@@ -4,6 +4,7 @@ import type { CreateBucketInput, DeleteBucketInput } from '../../shared/types/bu
 import type { CreateConnectionInput, UpdateConnectionInput } from '../../shared/types/connection'
 import type {
   CopyObjectInput,
+  CreateFolderInput,
   DeleteObjectInput,
   ListObjectsInput,
   MoveObjectInput,
@@ -78,6 +79,9 @@ export const registerIpcHandlers = (services: IpcServices): void => {
   registerHandler(ipcChannels.objects.preview, (input: ObjectPreviewInput) =>
     services.storage.previewObject(input)
   )
+  registerHandler(ipcChannels.objects.createFolder, (input: CreateFolderInput) =>
+    services.storage.createFolder(input)
+  )
 
   registerHandler(ipcChannels.transfers.list, () => services.transfers.list())
   registerHandler(ipcChannels.transfers.createUpload, (input: CreateUploadTaskInput) =>
@@ -99,9 +103,12 @@ export const registerIpcHandlers = (services: IpcServices): void => {
   registerHandler(ipcChannels.transfers.clearCompleted, () => services.transfers.clearCompleted())
 
   registerHandler(ipcChannels.settings.get, (key: string) => services.settings.get(key))
-  registerHandler(ipcChannels.settings.set, (key: string, value: unknown) =>
+  registerHandler(ipcChannels.settings.set, (key: string, value: unknown) => {
     services.settings.set(key, value)
-  )
+    if (key === 'concurrency') {
+      services.transfers.updateConcurrency()
+    }
+  })
 
   registerHandler(ipcChannels.dialogs.selectFiles, () => services.dialogs.selectFiles())
   registerHandler(ipcChannels.dialogs.selectDirectory, () => services.dialogs.selectDirectory())

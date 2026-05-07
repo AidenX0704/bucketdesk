@@ -11,10 +11,12 @@ export function PageHeader({ title, description, extra }: PageHeaderProps): Reac
   return (
     <div className="page-header">
       <div>
-        <Typography.Title level={3} className="page-title">
+        <Typography.Title level={3} className="page-title" style={{ marginBottom: 6 }}>
           {title}
         </Typography.Title>
-        <Typography.Text type="secondary">{description}</Typography.Text>
+        <Typography.Text type="secondary" style={{ fontSize: 13 }}>
+          {description}
+        </Typography.Text>
       </div>
       {extra && <Space>{extra}</Space>}
     </div>

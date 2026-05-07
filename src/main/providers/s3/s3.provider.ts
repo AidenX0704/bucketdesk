@@ -3,6 +3,7 @@ import type { BucketInfo, CreateBucketInput, DeleteBucketInput } from '../../../
 import type { ConnectionProfile } from '../../../shared/types/connection'
 import type {
   CopyObjectInput,
+  CreateFolderInput,
   DeleteObjectInput,
   ListObjectsInput,
   ListObjectsResult,
@@ -12,7 +13,7 @@ import type {
 } from '../../../shared/types/object'
 import type { TestConnectionResult } from '../../../shared/types/provider'
 import type { CreateDownloadTaskInput, CreateUploadTaskInput } from '../../../shared/types/transfer'
-import type { DownloadObjectOptions } from '../../core/ports/storage-provider'
+import type { DownloadObjectOptions, UploadObjectOptions } from '../../core/ports/storage-provider'
 import { S3ClientAdapter } from './s3-client'
 
 export class S3CompatibleProvider extends ProviderBase {
@@ -74,8 +75,12 @@ export class S3CompatibleProvider extends ProviderBase {
     return this.client.createPresignedUrl(profile, input)
   }
 
-  uploadObject(profile: ConnectionProfile, input: CreateUploadTaskInput): Promise<void> {
-    return this.client.uploadObject(profile, input)
+  uploadObject(profile: ConnectionProfile, input: CreateUploadTaskInput, options?: UploadObjectOptions): Promise<void> {
+    return this.client.uploadObject(profile, input, options)
+  }
+
+  createFolder(profile: ConnectionProfile, input: CreateFolderInput): Promise<void> {
+    return this.client.createFolder(profile, input.bucket, input.key)
   }
 
   downloadObject(

@@ -2,6 +2,7 @@ import type { BucketInfo, CreateBucketInput, DeleteBucketInput } from '../../../
 import type { ConnectionProfile } from '../../../shared/types/connection'
 import type {
   CopyObjectInput,
+  CreateFolderInput,
   DeleteObjectInput,
   ListObjectsInput,
   ListObjectsResult,
@@ -30,7 +31,8 @@ export interface StorageProvider {
   deleteObjects(profile: ConnectionProfile, input: DeleteObjectInput): Promise<void>
   copyObject(profile: ConnectionProfile, input: CopyObjectInput): Promise<void>
   createPresignedUrl(profile: ConnectionProfile, input: PresignedUrlInput): Promise<string>
-  uploadObject(profile: ConnectionProfile, input: CreateUploadTaskInput): Promise<void>
+  uploadObject(profile: ConnectionProfile, input: CreateUploadTaskInput, options?: UploadObjectOptions): Promise<void>
+  createFolder(profile: ConnectionProfile, input: CreateFolderInput): Promise<void>
   downloadObject(
     profile: ConnectionProfile,
     input: CreateDownloadTaskInput,
@@ -38,13 +40,21 @@ export interface StorageProvider {
   ): Promise<void>
 }
 
+export interface UploadObjectOptions {
+  signal?: AbortSignal
+  onProgress?: (event: TransferProgressEvent) => void
+}
+
 export interface DownloadObjectOptions {
   signal?: AbortSignal
   startByte?: number
-  onProgress?: (event: DownloadProgressEvent) => void
+  onProgress?: (event: TransferProgressEvent) => void
 }
 
-export interface DownloadProgressEvent {
+export interface TransferProgressEvent {
   transferredBytes: number
   totalBytes: number
 }
+
+/** @deprecated Use TransferProgressEvent instead */
+export type DownloadProgressEvent = TransferProgressEvent

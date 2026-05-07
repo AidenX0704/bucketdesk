@@ -20,7 +20,8 @@ export const desktopApi: DesktopStorageApi = {
     copyObject: (input) => ipcRenderer.invoke(ipcChannels.objects.copy, input),
     moveObject: (input) => ipcRenderer.invoke(ipcChannels.objects.move, input),
     createPresignedUrl: (input) => ipcRenderer.invoke(ipcChannels.objects.presignUrl, input),
-    previewObject: (input) => ipcRenderer.invoke(ipcChannels.objects.preview, input)
+    previewObject: (input) => ipcRenderer.invoke(ipcChannels.objects.preview, input),
+    createFolder: (input) => ipcRenderer.invoke(ipcChannels.objects.createFolder, input)
   },
   transfers: {
     list: () => ipcRenderer.invoke(ipcChannels.transfers.list),

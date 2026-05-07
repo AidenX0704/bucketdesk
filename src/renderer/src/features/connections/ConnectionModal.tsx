@@ -22,13 +22,13 @@ export function ConnectionModal({ open, onCancel, onSubmit }: ConnectionModalPro
   return (
     <Modal
       title={
-        <Space className="connection-modal-title">
-          <CloudServerOutlined />
-          <span>新建云存储连接</span>
+        <Space className="connection-modal-title" size={10}>
+          <CloudServerOutlined style={{ fontSize: 18, color: 'var(--brand-primary)' }} />
+          <span style={{ fontWeight: 600 }}>新建云存储连接</span>
         </Space>
       }
       open={open}
-      width={760}
+      width={720}
       centered
       okText="保存连接"
       cancelText="取消"
@@ -37,9 +37,10 @@ export function ConnectionModal({ open, onCancel, onSubmit }: ConnectionModalPro
         void form.validateFields().then(onSubmit)
       }}
       afterClose={() => form.resetFields()}
-      styles={{ body: { paddingTop: 8 } }}
+      styles={{ body: { paddingTop: 12 } }}
+      rootStyle={{ top: 40 }}
     >
-      <Typography.Paragraph type="secondary" className="connection-modal-desc">
+      <Typography.Paragraph type="secondary" className="connection-modal-desc" style={{ fontSize: 13 }}>
         仅需填写连接名称、Endpoint 和访问密钥。高级选项已默认按 MinIO / S3 兼容场景配置。
       </Typography.Paragraph>
 

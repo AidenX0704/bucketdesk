@@ -25,8 +25,8 @@ const connectionService = new ConnectionService(
   providerRegistry
 )
 const storageService = new StorageService(connectionService, providerRegistry)
-const transferService = new TransferService(transferRepository, connectionService, providerRegistry)
 const settingService = new SettingService(store)
+const transferService = new TransferService(transferRepository, connectionService, providerRegistry, settingService)
 const dialogService = new DialogService()
 const windowService = new WindowService()
 

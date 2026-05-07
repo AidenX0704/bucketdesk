@@ -182,18 +182,20 @@ export function TransferPanel({
   ]
 
   return (
-    <Card title="传输任务" className="surface-card">
+    <Card title="传输任务" className="surface-card" styles={{ body: { padding: '0 24px 24px' } }}>
       {tasks.length > 0 ? (
-        <Table
-          rowKey="id"
-          className="transfer-table"
-          columns={columns}
-          dataSource={tasks}
-          pagination={false}
-          size="middle"
-          tableLayout="fixed"
-          scroll={{ x: 990 }}
-        />
+        <div className="table-scroll">
+          <Table
+            rowKey="id"
+            className="transfer-table"
+            columns={columns}
+            dataSource={tasks}
+            pagination={false}
+            size="middle"
+            tableLayout="fixed"
+            scroll={{ x: 990 }}
+          />
+        </div>
       ) : (
         <Empty description="暂无传输任务，上传或下载对象后会显示在这里。" />
       )}
