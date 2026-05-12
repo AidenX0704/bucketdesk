@@ -12,6 +12,7 @@ import { DialogService } from './services/dialog.service'
 import { SettingService } from './services/setting.service'
 import { StorageService } from './services/storage.service'
 import { TransferService } from './services/transfer.service'
+import { UpdateService } from './services/update.service'
 import { WindowService } from './services/window.service'
 
 const providerRegistry = new ProviderRegistry()
@@ -27,6 +28,7 @@ const connectionService = new ConnectionService(
 const storageService = new StorageService(connectionService, providerRegistry)
 const settingService = new SettingService(store)
 const transferService = new TransferService(transferRepository, connectionService, providerRegistry, settingService)
+const updateService = new UpdateService(settingService)
 const dialogService = new DialogService()
 const windowService = new WindowService()
 
@@ -49,6 +51,7 @@ app.whenReady().then(() => {
     storage: storageService,
     transfers: transferService,
     settings: settingService,
+    updates: updateService,
     dialogs: dialogService,
     window: windowService
   })

@@ -1,5 +1,13 @@
-import { CloudUploadOutlined, DatabaseOutlined, FolderOpenOutlined, PlusOutlined, RightOutlined, SwapOutlined } from '@ant-design/icons'
-import { Card, Col, Empty, List, Row, Space, Statistic, Tag, Typography } from 'antd'
+import {
+  CloudUploadOutlined,
+  DatabaseOutlined,
+  FolderOpenOutlined,
+  PlusOutlined,
+  RightOutlined,
+  SwapOutlined,
+  ThunderboltOutlined
+} from '@ant-design/icons'
+import { Card, Col, Empty, Row, Tag, Typography } from 'antd'
 import type { ConnectionSummary } from '../../../../shared/types/connection'
 import type { TransferTask } from '../../../../shared/types/transfer'
 import type { AppPage } from '../../layouts/MainLayout'
@@ -42,50 +50,68 @@ export function OverviewCards({
   onCreateConnection
 }: OverviewCardsProps): React.JSX.Element {
   return (
-    <Space direction="vertical" size={20} style={{ width: '100%' }}>
-      <Row gutter={[16, 16]}>
+    <div className="overview-shell">
+      <Row gutter={[24, 24]}>
         <Col xs={24} sm={8}>
-          <Card className="metric-card metric-card-blue" bordered={false} hoverable onClick={() => onNavigate('storage')}>
-            <Statistic
-              title="活跃连接"
-              value={connectionCount}
-              prefix={<DatabaseOutlined style={{ color: 'var(--brand-primary)', fontSize: 20 }} />}
-              valueStyle={{ fontSize: 28 }}
-            />
+          <Card
+            className="metric-card metric-card-blue"
+            variant="borderless"
+            hoverable
+            onClick={() => onNavigate('storage')}
+          >
+            <div className="metric-content">
+              <Typography.Text className="metric-title">活跃连接</Typography.Text>
+              <div className="metric-value-row">
+                <DatabaseOutlined className="metric-icon metric-icon-blue" />
+                <Typography.Text className="metric-value">{connectionCount}</Typography.Text>
+              </div>
+            </div>
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card className="metric-card metric-card-cyan" bordered={false} hoverable onClick={() => onNavigate('storage')}>
-            <Statistic
-              title="存储桶"
-              value={bucketCount}
-              prefix={<FolderOpenOutlined style={{ color: 'var(--color-info)', fontSize: 20 }} />}
-              valueStyle={{ fontSize: 28 }}
-            />
+          <Card
+            className="metric-card metric-card-cyan"
+            variant="borderless"
+            hoverable
+            onClick={() => onNavigate('storage')}
+          >
+            <div className="metric-content">
+              <Typography.Text className="metric-title">存储桶</Typography.Text>
+              <div className="metric-value-row">
+                <FolderOpenOutlined className="metric-icon metric-icon-cyan" />
+                <Typography.Text className="metric-value">{bucketCount}</Typography.Text>
+              </div>
+            </div>
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card className="metric-card metric-card-green" bordered={false} hoverable onClick={() => onNavigate('transfers')}>
-            <Statistic
-              title="传输任务"
-              value={transferCount}
-              prefix={<CloudUploadOutlined style={{ color: 'var(--color-success)', fontSize: 20 }} />}
-              valueStyle={{ fontSize: 28 }}
-            />
+          <Card
+            className="metric-card metric-card-green"
+            variant="borderless"
+            hoverable
+            onClick={() => onNavigate('transfers')}
+          >
+            <div className="metric-content">
+              <Typography.Text className="metric-title">传输任务</Typography.Text>
+              <div className="metric-value-row">
+                <CloudUploadOutlined className="metric-icon metric-icon-green" />
+                <Typography.Text className="metric-value">{transferCount}</Typography.Text>
+              </div>
+            </div>
           </Card>
         </Col>
       </Row>
 
-      <Row gutter={[16, 16]}>
-        <Col xs={24} lg={12}>
+      <Row gutter={[32, 24]} align="stretch">
+        <Col xs={24} lg={16}>
           <Card
             title={
-              <Space>
-                <SwapOutlined />
+              <span className="card-title-row">
+                <SwapOutlined className="section-title-icon" />
                 <span>最近传输</span>
-              </Space>
+              </span>
             }
-            className="surface-card"
+            className="surface-card recent-transfer-card"
             extra={
               <Typography.Link onClick={() => onNavigate('transfers')}>
                 查看全部 <RightOutlined style={{ fontSize: 10 }} />
@@ -94,102 +120,100 @@ export function OverviewCards({
             styles={{ body: { padding: recentTransfers.length > 0 ? '0' : undefined } }}
           >
             {recentTransfers.length > 0 ? (
-              <List
-                dataSource={recentTransfers}
-                size="small"
-                renderItem={(task) => (
-                  <List.Item style={{ padding: '10px 24px' }}>
-                    <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                      <Space>
-                        <Tag color={task.direction === 'upload' ? 'blue' : 'green'} style={{ margin: 0 }}>
-                          {task.direction === 'upload' ? '上传' : '下载'}
-                        </Tag>
-                        <Typography.Text ellipsis style={{ maxWidth: 240 }}>
-                          {task.objectKey.split('/').pop() ?? task.objectKey}
-                        </Typography.Text>
-                      </Space>
-                      <Tag color={statusColor[task.status]}>{statusLabel[task.status]}</Tag>
-                    </Space>
-                  </List.Item>
-                )}
-              />
+              <div className="recent-transfer-list">
+                {recentTransfers.map((task) => (
+                  <div className="recent-transfer-item" key={task.id}>
+                    <div className="recent-transfer-file">
+                      <Tag
+                        color={task.direction === 'upload' ? 'blue' : 'green'}
+                        className="transfer-direction-tag"
+                      >
+                        {task.direction === 'upload' ? '上传' : '下载'}
+                      </Tag>
+                      <Typography.Text ellipsis className="recent-transfer-name">
+                        {task.objectKey.split('/').pop() ?? task.objectKey}
+                      </Typography.Text>
+                    </div>
+                    <Tag color={statusColor[task.status]} className="transfer-status-tag">
+                      <span className="transfer-status-dot" />
+                      {statusLabel[task.status]}
+                    </Tag>
+                  </div>
+                ))}
+              </div>
             ) : (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无传输记录" />
             )}
           </Card>
         </Col>
 
-        <Col xs={24} lg={12}>
+        <Col xs={24} lg={8}>
           <Card
             title={
-              <Space>
-                <DatabaseOutlined />
+              <span className="card-title-row">
+                <ThunderboltOutlined className="quick-title-icon" />
                 <span>快速操作</span>
-              </Space>
+              </span>
             }
-            className="surface-card"
+            className="surface-card quick-panel"
           >
-            <Space direction="vertical" size={12} style={{ width: '100%' }}>
-              <Card
-                hoverable
-                className="quick-action-card"
-                onClick={onCreateConnection}
-                styles={{ body: { padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 } }}
-              >
-                <PlusOutlined style={{ fontSize: 18, color: 'var(--brand-primary)' }} />
-                <div>
+            <div className="quick-action-list">
+              <button className="quick-action-card quick-action-blue" onClick={onCreateConnection}>
+                <span className="quick-action-icon">
+                  <PlusOutlined />
+                </span>
+                <span className="quick-action-copy">
                   <Typography.Text strong>新建连接</Typography.Text>
-                  <Typography.Text type="secondary" style={{ display: 'block', fontSize: 12 }}>
-                    添加 MinIO、S3 或其他云存储
-                  </Typography.Text>
-                </div>
-              </Card>
-              <Card
-                hoverable
-                className="quick-action-card"
+                  <Typography.Text type="secondary">添加 MinIO、S3 或其他云存储</Typography.Text>
+                </span>
+              </button>
+
+              <button
+                className="quick-action-card quick-action-cyan"
                 onClick={() => onNavigate('storage')}
-                styles={{ body: { padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 } }}
               >
-                <FolderOpenOutlined style={{ fontSize: 18, color: 'var(--color-info)' }} />
-                <div>
+                <span className="quick-action-icon">
+                  <FolderOpenOutlined />
+                </span>
+                <span className="quick-action-copy">
                   <Typography.Text strong>浏览文件</Typography.Text>
-                  <Typography.Text type="secondary" style={{ display: 'block', fontSize: 12 }}>
+                  <Typography.Text type="secondary">
                     {connectionCount > 0 ? `当前有 ${connectionCount} 个连接` : '请先创建连接'}
                   </Typography.Text>
-                </div>
-              </Card>
-              <Card
-                hoverable
-                className="quick-action-card"
+                </span>
+              </button>
+
+              <button
+                className="quick-action-card quick-action-green"
                 onClick={() => onNavigate('transfers')}
-                styles={{ body: { padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 } }}
               >
-                <CloudUploadOutlined style={{ fontSize: 18, color: 'var(--color-success)' }} />
-                <div>
+                <span className="quick-action-icon">
+                  <CloudUploadOutlined />
+                </span>
+                <span className="quick-action-copy">
                   <Typography.Text strong>传输管理</Typography.Text>
-                  <Typography.Text type="secondary" style={{ display: 'block', fontSize: 12 }}>
+                  <Typography.Text type="secondary">
                     {transferCount > 0 ? `当前有 ${transferCount} 个任务` : '暂无传输任务'}
                   </Typography.Text>
+                </span>
+              </button>
+            </div>
+
+            {connections.length > 0 && (
+              <div className="quick-access-panel">
+                <Typography.Text type="secondary">已保存的快速访问:</Typography.Text>
+                <div className="quick-access-tags">
+                  {connections.map((conn) => (
+                    <Tag key={conn.id} className="quick-access-tag">
+                      {conn.name}
+                    </Tag>
+                  ))}
                 </div>
-              </Card>
-              {connections.length > 0 && (
-                <Card className="connection-overview-card" styles={{ body: { padding: '12px 16px' } }}>
-                  <Typography.Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 8 }}>
-                    已保存连接
-                  </Typography.Text>
-                  <Space wrap size={[8, 4]}>
-                    {connections.map((conn) => (
-                      <Tag key={conn.id} bordered={false} className="connection-provider-tag">
-                        {conn.name}
-                      </Tag>
-                    ))}
-                  </Space>
-                </Card>
-              )}
-            </Space>
+              </div>
+            )}
           </Card>
         </Col>
       </Row>
-    </Space>
+    </div>
   )
 }

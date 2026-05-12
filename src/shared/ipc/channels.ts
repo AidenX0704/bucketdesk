@@ -38,6 +38,9 @@ export const ipcChannels = {
     get: 'settings:get',
     set: 'settings:set'
   },
+  updates: {
+    check: 'updates:check'
+  },
   dialogs: {
     selectFiles: 'dialogs:select-files',
     selectDirectory: 'dialogs:select-directory'

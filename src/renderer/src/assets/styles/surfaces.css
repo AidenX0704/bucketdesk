@@ -1,0 +1,76 @@
+.table-scroll {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+}
+
+.table-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: var(--neutral-300);
+  border-radius: var(--radius-full);
+}
+
+.panel-card {
+  border-color: var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.surface-card,
+.metric-card,
+.ant-card {
+  min-width: 0;
+  border-color: var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: var(--shadow-xs);
+}
+
+.surface-card .ant-card-body,
+.ant-card .ant-card-body {
+  min-width: 0;
+}
+
+.surface-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.card-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.surface-card .ant-card-head {
+  min-height: 65px;
+  padding: 0 24px;
+  border-bottom-color: var(--border-subtle);
+}
+
+.surface-card .ant-card-head-title {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.surface-card .ant-card-extra {
+  color: var(--brand-primary);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.section-title-icon {
+  color: var(--text-tertiary);
+}
+
+.card-title-icon {
+  margin-right: 8px;
+}
+
+.card-title-icon-warning {
+  color: var(--color-warning);
+}

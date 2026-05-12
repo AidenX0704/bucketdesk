@@ -1,0 +1,60 @@
+.connection-modal-title {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.connection-modal-desc {
+  margin-bottom: 14px;
+  color: var(--text-secondary);
+}
+
+.form-section {
+  padding: 16px 16px 4px;
+  background: var(--neutral-50);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.compact-divider {
+  margin: 16px 0;
+}
+
+.advanced-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+  padding: 14px 16px;
+  background: var(--neutral-50);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.advanced-title {
+  margin-bottom: 0;
+}
+
+.switch-item {
+  margin-bottom: 0;
+}
+
+.switch-item .ant-form-item-label {
+  padding-bottom: 2px;
+}
+
+[data-theme='dark'] .form-section,
+[data-theme='dark'] .advanced-row {
+  background: var(--neutral-50);
+  border-color: var(--border-subtle);
+}

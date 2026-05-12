@@ -47,6 +47,9 @@ export const desktopApi: DesktopStorageApi = {
     get: (key) => ipcRenderer.invoke(ipcChannels.settings.get, key),
     set: (key, value) => ipcRenderer.invoke(ipcChannels.settings.set, key, value)
   },
+  updates: {
+    check: (input) => ipcRenderer.invoke(ipcChannels.updates.check, input)
+  },
   dialogs: {
     selectFiles: () => ipcRenderer.invoke(ipcChannels.dialogs.selectFiles),
     selectDirectory: () => ipcRenderer.invoke(ipcChannels.dialogs.selectDirectory)

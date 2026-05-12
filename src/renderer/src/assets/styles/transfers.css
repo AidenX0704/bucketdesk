@@ -1,0 +1,60 @@
+.transfer-table .ant-table-thead > tr > th {
+  color: var(--text-secondary);
+  background: var(--neutral-50);
+  border-bottom-color: var(--border-default);
+  font-weight: 500;
+}
+
+.transfer-table .ant-table-cell {
+  white-space: nowrap;
+  border-bottom-color: var(--border-subtle);
+}
+
+.transfer-table .ant-table-body,
+.transfer-table .ant-table-content {
+  scrollbar-width: thin;
+}
+
+.transfer-object-cell,
+.transfer-status-cell,
+.transfer-progress-cell {
+  width: 100%;
+  min-width: 0;
+}
+
+.transfer-object-cell .ant-space-item,
+.transfer-progress-cell .ant-space-item {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.transfer-object-name,
+.transfer-object-path,
+.transfer-object-error {
+  display: block;
+  max-width: 100%;
+}
+
+.transfer-resumable-label,
+.transfer-progress-meta {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.transfer-progress-cell .ant-progress {
+  margin-bottom: 0;
+}
+
+.transfer-actions {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.transfer-actions .ant-btn {
+  padding-inline: 8px;
+}
+
+[data-theme='dark'] .transfer-table .ant-table-thead > tr > th {
+  background: var(--neutral-50);
+}

@@ -87,6 +87,9 @@
   --file-color-pdf: #ef4444;
   --file-color-word: #3b82f6;
   --file-color-excel: #10b981;
+  --file-color-code: #3b82f6;
+  --file-color-archive: #8b5cf6;
+  --file-color-slides: #f97316;
   --file-color-text: #6b7280;
   --file-color-default: #9ca3af;
 }
@@ -150,6 +153,9 @@
   --file-color-pdf: #f87171;
   --file-color-word: #60a5fa;
   --file-color-excel: #34d399;
+  --file-color-code: #60a5fa;
+  --file-color-archive: #a78bfa;
+  --file-color-slides: #fb923c;
   --file-color-text: #94a3b8;
   --file-color-default: #64748b;
 }

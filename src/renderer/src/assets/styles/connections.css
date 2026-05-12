@@ -1,0 +1,308 @@
+/* 基础卡片框架保持不变 */
+.connection-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.connection-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.connection-card-title {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.connection-card-count {
+  margin-left: 6px;
+  color: var(--text-tertiary);
+  font-family: 'Cascadia Code', 'SF Mono', Consolas, 'Courier New', monospace;
+  font-weight: 400;
+}
+
+.connection-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 头部按钮样式优化 */
+.connection-header-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+}
+
+.connection-header-create-button {
+  border-radius: 6px;
+}
+
+.connection-header-icon-button:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface-hover);
+}
+
+.connection-header-icon-button.spinning .anticon {
+  animation: connectionSpin 0.8s linear infinite;
+}
+
+@keyframes connectionSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 列表容器 */
+.connection-list .ant-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+}
+
+.connection-list .ant-empty {
+  margin: 0;
+}
+
+/* --- 重新设计的列表项 --- */
+.connection-item {
+  position: relative;
+  display: block;
+  margin-bottom: 0;
+  padding: 12px;
+  overflow: hidden;
+  background: var(--bg-surface);
+  border: 1px solid rgba(15, 23, 42, 0.08); /* 更轻微的边框 */
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  opacity: 0;
+  animation: connectionItemReveal 0.45s ease forwards;
+  transition: all var(--transition-base);
+}
+
+/* 进场动画延迟 */
+.connection-list .ant-list-items .connection-item:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.connection-list .ant-list-items .connection-item:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.connection-list .ant-list-items .connection-item:nth-child(3) {
+  animation-delay: 0.19s;
+}
+.connection-list .ant-list-items .connection-item:nth-child(4) {
+  animation-delay: 0.26s;
+}
+.connection-list .ant-list-items .connection-item:nth-child(5) {
+  animation-delay: 0.33s;
+}
+
+@keyframes connectionItemReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 悬浮与激活态 */
+.connection-item:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.connection-item.active {
+  background: rgba(59, 130, 246, 0.03);
+  border-color: var(--brand-primary);
+  box-shadow:
+    0 0 0 1px var(--brand-primary),
+    var(--shadow-sm);
+}
+
+/* 项内部布局 */
+.connection-item-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* 左侧 Icon */
+.connection-icon-wrap {
+  display: grid;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  background: var(--neutral-50);
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  border-radius: 8px;
+  margin-left: 8px;
+}
+
+.connection-item:hover .connection-icon-wrap {
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+.connection-item.active .connection-icon-wrap {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.connection-icon {
+  color: var(--text-secondary);
+  font-size: 16px;
+  transition: color var(--transition-base);
+}
+
+.connection-item.active .connection-icon {
+  color: var(--brand-primary);
+}
+
+/* 中间信息 */
+.connection-main-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.connection-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.connection-name {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.connection-provider-tag {
+  margin-inline-end: 0;
+  color: var(--text-secondary);
+  background: var(--neutral-100);
+  border: none;
+  border-radius: 4px;
+  font-family: 'Cascadia Code', 'SF Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 0 6px;
+  line-height: 18px;
+  transition: all var(--transition-base);
+}
+
+.connection-item.active .connection-provider-tag {
+  color: var(--brand-primary);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.connection-endpoint {
+  color: var(--text-tertiary);
+  font-family: 'Cascadia Code', 'SF Mono', monospace;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* 右侧操作按钮 */
+.connection-item-actions {
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: translateX(4px);
+  transition: all var(--transition-base);
+}
+
+.connection-item:hover .connection-item-actions,
+.connection-item.active .connection-item-actions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.connection-more-button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.connection-more-button:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface-hover);
+}
+
+/* 骨架屏优化 (稍微调低高度适应新布局) */
+.connection-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.connection-skeleton-item {
+  height: 62px;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    var(--neutral-100) 25%,
+    var(--neutral-50) 50%,
+    var(--neutral-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: connectionShimmer 1.8s ease infinite;
+}
+
+/* 暗色模式适配 */
+[data-theme='dark'] .connection-item {
+  background: var(--bg-surface);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .connection-item:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme='dark'] .connection-item.active {
+  background: var(--brand-primary-bg);
+  border-color: var(--brand-primary);
+}
+
+[data-theme='dark'] .connection-icon-wrap {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}

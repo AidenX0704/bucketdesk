@@ -13,11 +13,13 @@ import type {
   StatObjectInput
 } from '../../shared/types/object'
 import type { CreateDownloadTaskInput, CreateUploadTaskInput } from '../../shared/types/transfer'
+import type { UpdateCheckInput } from '../../shared/types/update'
 import type { ConnectionService } from '../services/connection.service'
 import type { DialogService } from '../services/dialog.service'
 import type { SettingService } from '../services/setting.service'
 import type { StorageService } from '../services/storage.service'
 import type { TransferService } from '../services/transfer.service'
+import type { UpdateService } from '../services/update.service'
 import type { WindowService } from '../services/window.service'
 import { registerHandler } from './router'
 
@@ -26,6 +28,7 @@ export interface IpcServices {
   storage: StorageService
   transfers: TransferService
   settings: SettingService
+  updates: UpdateService
   dialogs: DialogService
   window: WindowService
 }
@@ -109,6 +112,9 @@ export const registerIpcHandlers = (services: IpcServices): void => {
       services.transfers.updateConcurrency()
     }
   })
+  registerHandler(ipcChannels.updates.check, (input?: UpdateCheckInput) =>
+    services.updates.check(input)
+  )
 
   registerHandler(ipcChannels.dialogs.selectFiles, () => services.dialogs.selectFiles())
   registerHandler(ipcChannels.dialogs.selectDirectory, () => services.dialogs.selectDirectory())

@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  min-width: 1080px;
+  min-height: 680px;
+  overflow: hidden;
+  background: var(--bg-app);
+  user-select: none;
+}
+
+button,
+input,
+textarea {
+  user-select: auto;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.app-shell {
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-app);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neutral-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neutral-400);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.api-error {
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: 100vh;
+  color: var(--color-error);
+  background: var(--color-error-bg);
+}

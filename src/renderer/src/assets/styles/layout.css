@@ -1,0 +1,269 @@
+.titlebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 256px;
+  z-index: 50;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  -webkit-app-region: drag;
+}
+
+.titlebar-safe-area {
+  width: 120px;
+}
+
+.titlebar-drag {
+  flex: 1;
+  height: 100%;
+}
+
+.titlebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 100%;
+  padding: 0 8px;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-actions .ant-btn {
+  width: 34px;
+  height: 30px;
+  min-width: 34px;
+  padding: 0;
+  color: color-mix(in srgb, var(--text-secondary) 86%, transparent);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  box-shadow: none;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.titlebar-actions .ant-btn .anticon {
+  font-size: 11px;
+}
+
+.titlebar-actions .ant-btn:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.titlebar-actions .ant-btn:not(:disabled):hover,
+.titlebar-actions .ant-btn:not(:disabled):focus-visible {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+}
+
+.titlebar-actions .titlebar-close-button:not(:disabled):hover,
+.titlebar-actions .titlebar-close-button:not(:disabled):focus-visible {
+  color: var(--color-danger, #ef4444);
+  background: color-mix(in srgb, var(--color-danger, #ef4444) 12%, transparent);
+}
+
+.app-sidebar {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-default);
+  box-shadow: 2px 0 8px -4px rgba(0, 0, 0, 0.1);
+}
+
+.app-sidebar .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 64px;
+  height: 64px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  -webkit-app-region: drag;
+}
+
+.sidebar-logo {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--text-inverse);
+  background: var(--brand-primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  font-size: 16px;
+}
+
+.sidebar-brand-title {
+  display: block;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.sidebar-brand-subtitle {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.app-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.app-sidebar::-webkit-scrollbar-thumb {
+  background: var(--neutral-300);
+  border-radius: var(--radius-full);
+}
+
+.nav-section {
+  flex: 0 0 auto;
+  padding: 16px 12px 10px;
+}
+
+.nav-kicker {
+  display: block;
+  margin: 0 12px 8px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.app-sidebar .ant-menu {
+  border-inline-end: none;
+  background: transparent;
+}
+
+.app-sidebar .ant-menu-item {
+  width: calc(100% - 16px);
+  height: 40px;
+  margin-inline: 8px;
+  margin-block: 0 4px;
+  padding-inline: 12px !important;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background var(--transition-fast);
+}
+
+.app-sidebar .ant-menu-item-selected {
+  background: var(--brand-primary-bg);
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+.app-sidebar .ant-menu-item:hover:not(.ant-menu-item-selected) {
+  background: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.app-sidebar .ant-menu-item .anticon {
+  width: 24px;
+  margin-right: 4px;
+  text-align: center;
+}
+
+.connection-panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 12px 16px;
+}
+
+.app-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 32px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--neutral-50);
+}
+
+.content-stack {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.storage-content-stack {
+  flex: 1;
+  min-height: 0;
+  max-width: none;
+}
+
+.storage-content-stack > .ant-space-item:last-child {
+  flex: 1;
+  min-height: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  padding: 0 0 8px;
+}
+
+.page-header > div:first-child {
+  min-width: 0;
+}
+
+.page-title {
+  margin: 0 0 4px;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-header .ant-typography-secondary {
+  display: block;
+  overflow: hidden;
+  max-width: 72ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-header > .ant-space {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+[data-theme='dark'] .titlebar {
+  background: transparent;
+}
+
+[data-theme='dark'] .titlebar-actions {
+  background: transparent;
+}
+
+[data-theme='dark'] .titlebar-actions .ant-btn:not(:disabled):hover,
+[data-theme='dark'] .titlebar-actions .ant-btn:not(:disabled):focus-visible {
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+}
+
+[data-theme='dark'] .titlebar-actions .titlebar-close-button:not(:disabled):hover,
+[data-theme='dark'] .titlebar-actions .titlebar-close-button:not(:disabled):focus-visible {
+  background: color-mix(in srgb, var(--color-danger, #ef4444) 18%, transparent);
+}

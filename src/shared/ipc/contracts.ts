@@ -25,6 +25,7 @@ import type {
   TransferProgressEvent,
   TransferTask
 } from '../types/transfer'
+import type { UpdateCheckInput, UpdateCheckResult } from '../types/update'
 
 export interface ConnectionsApi {
   list(): Promise<AppResult<ConnectionSummary[]>>
@@ -67,6 +68,10 @@ export interface SettingsApi {
   set<T>(key: string, value: T): Promise<AppResult<void>>
 }
 
+export interface UpdatesApi {
+  check(input?: UpdateCheckInput): Promise<AppResult<UpdateCheckResult>>
+}
+
 export interface DialogsApi {
   selectFiles(): Promise<AppResult<string[]>>
   selectDirectory(): Promise<AppResult<string | undefined>>
@@ -85,6 +90,7 @@ export interface DesktopStorageApi {
   storage: StorageApi
   transfers: TransfersApi
   settings: SettingsApi
+  updates: UpdatesApi
   dialogs: DialogsApi
   window: WindowApi
 }

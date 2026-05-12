@@ -1,0 +1,23 @@
+.ant-empty-description {
+  color: var(--text-tertiary);
+}
+
+.ant-popconfirm {
+  transform: translateX(-50%);
+}
+
+.ant-popconfirm .ant-popconfirm-buttons {
+  justify-content: flex-end;
+}
+
+.ant-modal-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-modal-wrap .ant-modal {
+  top: 0;
+  margin: auto;
+  padding-bottom: 0;
+}

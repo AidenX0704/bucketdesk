@@ -1,72 +1,52 @@
 import {
+  CodeSandboxOutlined,
   CloudOutlined,
   DashboardOutlined,
+  ExperimentOutlined,
   SettingOutlined,
   SwapOutlined
 } from '@ant-design/icons'
 import { Layout, Menu, Typography } from 'antd'
-import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { type ReactNode } from 'react'
 import { Titlebar } from './Titlebar'
 
 const { Sider, Content } = Layout
 
-export type AppPage = 'overview' | 'storage' | 'transfers' | 'settings'
+export type AppPage = 'overview' | 'storage' | 'transfers' | 'settings' | 'developerDebug'
 
 interface MainLayoutProps {
   activePage: AppPage
   sidebar: ReactNode
   children: ReactNode
   onPageChange: (page: AppPage) => void
+  showDeveloperDebug?: boolean
 }
 
-const MIN_SIDEBAR_WIDTH = 220
-const MAX_SIDEBAR_WIDTH = 480
+const SIDEBAR_WIDTH = 256
 
 export function MainLayout({
   activePage,
   sidebar,
   children,
-  onPageChange
+  onPageChange,
+  showDeveloperDebug = false
 }: MainLayoutProps): React.JSX.Element {
-  const [sidebarWidth, setSidebarWidth] = useState(300)
-  const [isResizing, setIsResizing] = useState(false)
-  const resizerRef = useRef<HTMLDivElement>(null)
-
-  const handleMouseDown = useCallback((event: React.MouseEvent) => {
-    event.preventDefault()
-    setIsResizing(true)
-  }, [])
-
-  useEffect(() => {
-    if (!isResizing) return
-
-    const handleMouseMove = (event: MouseEvent): void => {
-      const newWidth = Math.max(MIN_SIDEBAR_WIDTH, Math.min(MAX_SIDEBAR_WIDTH, event.clientX))
-      setSidebarWidth(newWidth)
-    }
-
-    const handleMouseUp = (): void => {
-      setIsResizing(false)
-    }
-
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-    document.body.style.cursor = 'col-resize'
-    document.body.style.userSelect = 'none'
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-      document.body.style.cursor = ''
-      document.body.style.userSelect = ''
-    }
-  }, [isResizing])
-
   return (
     <Layout className="app-shell">
       <Titlebar />
       <Layout>
-        <Sider width={sidebarWidth} theme="light" className="app-sidebar">
+        <Sider width={SIDEBAR_WIDTH} theme="light" className="app-sidebar">
+          <div className="sidebar-brand">
+            <div className="sidebar-logo">
+              <CodeSandboxOutlined />
+            </div>
+            <div>
+              <Typography.Text strong className="sidebar-brand-title">
+                MinIO Cloud
+              </Typography.Text>
+              <Typography.Text className="sidebar-brand-subtitle">多云对象存储管理</Typography.Text>
+            </div>
+          </div>
           <div className="nav-section">
             <Typography.Text className="nav-kicker">Workspace</Typography.Text>
             <Menu
@@ -77,16 +57,14 @@ export function MainLayout({
                 { key: 'overview', icon: <DashboardOutlined />, label: '总览' },
                 { key: 'storage', icon: <CloudOutlined />, label: '对象存储' },
                 { key: 'transfers', icon: <SwapOutlined />, label: '传输中心' },
-                { key: 'settings', icon: <SettingOutlined />, label: '设置' }
+                { key: 'settings', icon: <SettingOutlined />, label: '设置' },
+                ...(showDeveloperDebug
+                  ? [{ key: 'developerDebug', icon: <ExperimentOutlined />, label: '开发调试' }]
+                  : [])
               ]}
             />
           </div>
           <div className="connection-panel">{sidebar}</div>
-          <div
-            ref={resizerRef}
-            className={`sidebar-resizer${isResizing ? ' active' : ''}`}
-            onMouseDown={handleMouseDown}
-          />
         </Sider>
         <Content className="app-content">{children}</Content>
       </Layout>

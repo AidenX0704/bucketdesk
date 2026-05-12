@@ -1,13 +1,13 @@
 import { App as AntApp, Button, ConfigProvider, Space, theme } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { StorageObject } from '../../shared/types/object'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { PageHeader } from './components/PageHeader'
 import { ConnectionList } from './features/connections/ConnectionList'
 import { ConnectionModal } from './features/connections/ConnectionModal'
 import { OverviewCards } from './features/dashboard/OverviewCards'
+import { DeveloperDebugPage } from './features/debug/DeveloperDebugPage'
 import { SettingsPage } from './features/settings/SettingsPage'
-import { BucketTable } from './features/storage/BucketTable'
 import { ObjectTable } from './features/storage/ObjectTable'
 import { TransferPanel } from './features/transfers/TransferPanel'
 import { useConnections } from './hooks/useConnections'
@@ -17,9 +17,21 @@ import { useTransfers } from './hooks/useTransfers'
 import { MainLayout, type AppPage } from './layouts/MainLayout'
 
 function App(): React.JSX.Element {
+  if (!window.api) {
+    return (
+      <div className="api-error">Preload API 未加载，请确认当前页面运行在 Electron 窗口中。</div>
+    )
+  }
+
+  return <DesktopApp />
+}
+
+function DesktopApp(): React.JSX.Element {
   const [activePage, setActivePage] = useState<AppPage>('overview')
   const [selectedObject, setSelectedObject] = useState<StorageObject>()
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>('light')
+  const showDeveloperDebug =
+    import.meta.env.DEV || import.meta.env.VITE_ENABLE_INTERNAL_DEBUG === 'true'
 
   const connections = useConnections()
   const storage = useStorageBrowser(connections.activeConnection)
@@ -35,14 +47,13 @@ function App(): React.JSX.Element {
     })
   }, [])
 
-  if (!window.api) {
-    return <div className="api-error">Preload API 未加载，请确认当前页面运行在 Electron 窗口中。</div>
-  }
-
-  const handleSelectConnection = (connection: (typeof connections.connections)[0]): void => {
-    connections.select(connection)
-    setActivePage('storage')
-  }
+  const handleSelectConnection = useCallback(
+    (connection: (typeof connections.connections)[0]): void => {
+      connections.select(connection)
+      setActivePage('storage')
+    },
+    [connections]
+  )
 
   const handleUpload = async (): Promise<void> => {
     const uploadInfo = await storage.uploadObject()
@@ -72,6 +83,27 @@ function App(): React.JSX.Element {
     setSelectedObject(undefined)
   }
 
+  const handleOpenBucket = useCallback(
+    (bucket: Parameters<typeof storage.openBucket>[0]): void => {
+      setSelectedObject(undefined)
+      storage.openBucket(bucket)
+    },
+    [storage]
+  )
+
+  const handleOpenPrefix = useCallback(
+    (nextPrefix: string): void => {
+      setSelectedObject(undefined)
+      storage.setPrefix(nextPrefix)
+    },
+    [storage]
+  )
+
+  const handleBackToBuckets = useCallback((): void => {
+    setSelectedObject(undefined)
+    storage.backToBuckets()
+  }, [storage])
+
   useKeyboardShortcuts({
     selectedObject,
     onDelete: (obj) => void handleDeleteObject(obj),
@@ -80,27 +112,25 @@ function App(): React.JSX.Element {
       const event = new CustomEvent('object-rename', { detail: obj })
       document.dispatchEvent(event)
     },
-    onBack: storage.activeBucket ? storage.backToBuckets : () => {},
+    onBack: storage.activeBucket ? handleBackToBuckets : () => {},
     enabled: activePage === 'storage'
   })
 
-  const sidebar = useMemo(
-    () => (
-      <ConnectionList
-        connections={connections.connections}
-        activeConnectionId={connections.activeConnection?.id}
-        loading={connections.loading}
-        onRefresh={connections.load}
-        onCreate={() => connections.setModalOpen(true)}
-        onTest={(connection) => void connections.test(connection)}
-        onDelete={(connection) => connections.remove(connection)}
-        onSelect={handleSelectConnection}
-      />
-    ),
-    [connections.connections, connections.activeConnection?.id, connections.loading]
+  const sidebar = (
+    <ConnectionList
+      connections={connections.connections}
+      activeConnectionId={connections.activeConnection?.id}
+      loading={connections.loading}
+      onRefresh={connections.load}
+      onCreate={connections.openCreateModal}
+      onEdit={connections.openEditModal}
+      onTest={(connection) => void connections.test(connection)}
+      onDelete={(connection) => connections.remove(connection)}
+      onSelect={handleSelectConnection}
+    />
   )
 
-  const storageContent = storage.activeBucket ? (
+  const storageContent = (
     <ObjectTable
       connectionId={connections.activeConnection?.id}
       bucket={storage.activeBucket}
@@ -109,27 +139,27 @@ function App(): React.JSX.Element {
       prefixes={storage.objectsResult?.prefixes ?? []}
       loading={storage.loadingObjects}
       buckets={storage.buckets}
-      onOpenPrefix={storage.setPrefix}
+      loadingBuckets={storage.loadingBuckets}
+      onOpenBucket={handleOpenBucket}
+      onCreateBucket={() => void storage.createBucket()}
+      onDeleteBucket={(bucket) => storage.deleteBucket(bucket)}
+      onOpenPrefix={handleOpenPrefix}
       onUpload={() => void handleUpload()}
       onDownload={(object) => void handleDownload(object)}
       onDelete={(object) => void handleDeleteObject(object)}
-      onPresign={(object) => void storage.createPresignedUrl(object)}
-      onBackToBuckets={storage.backToBuckets}
+      onBackToBuckets={handleBackToBuckets}
       onCreateFolder={(name) => void storage.createFolder(name)}
       onRename={(object, newName) => void handleRenameObject(object, newName)}
-      onCopy={(object, targetBucket, targetPrefix) => void storage.copyObjectTo(object, targetBucket, targetPrefix)}
-      onMove={(object, targetBucket, targetPrefix) => void storage.moveObjectTo(object, targetBucket, targetPrefix)}
+      onCopy={(object, targetBucket, targetPrefix) =>
+        void storage.copyObjectTo(object, targetBucket, targetPrefix)
+      }
+      onMove={(object, targetBucket, targetPrefix) =>
+        void storage.moveObjectTo(object, targetBucket, targetPrefix)
+      }
+      onRefreshBuckets={storage.loadBuckets}
+      onRefreshObjects={storage.loadObjects}
       selectedObject={selectedObject}
       onSelectObject={setSelectedObject}
-    />
-  ) : (
-    <BucketTable
-      buckets={storage.buckets}
-      loading={storage.loadingBuckets}
-      hasConnection={Boolean(connections.activeConnection)}
-      onCreate={() => void storage.createBucket()}
-      onDelete={(bucket) => storage.deleteBucket(bucket)}
-      onOpen={storage.openBucket}
     />
   )
 
@@ -144,7 +174,7 @@ function App(): React.JSX.Element {
           recentTransfers={transfers.transfers.slice(0, 5)}
           connections={connections.connections}
           onNavigate={setActivePage}
-          onCreateConnection={() => connections.setModalOpen(true)}
+          onCreateConnection={connections.openCreateModal}
         />
       </>
     ),
@@ -152,7 +182,7 @@ function App(): React.JSX.Element {
       <>
         <PageHeader
           title="对象存储"
-          description="浏览 Bucket、管理对象、创建预签名链接并启动上传下载任务。"
+          description="浏览 Bucket、管理对象、创建分享链接并启动上传下载任务。"
           extra={<Button onClick={storage.loadBuckets}>刷新</Button>}
         />
         {storageContent}
@@ -160,7 +190,11 @@ function App(): React.JSX.Element {
     ),
     transfers: (
       <>
-        <PageHeader title="传输中心" description="查看上传下载任务状态、错误和历史记录。" extra={<Button onClick={transfers.load}>刷新</Button>} />
+        <PageHeader
+          title="传输中心"
+          description="查看上传下载任务状态、错误和历史记录。"
+          extra={<Button onClick={transfers.load}>刷新</Button>}
+        />
         <TransferPanel
           tasks={transfers.transfers}
           onPause={(task) => void transfers.pause(task)}
@@ -176,6 +210,12 @@ function App(): React.JSX.Element {
       <>
         <PageHeader title="设置" description="配置传输偏好、安全策略和应用行为。" />
         <SettingsPage themeMode={themeMode} onThemeChange={setThemeMode} />
+      </>
+    ),
+    developerDebug: (
+      <>
+        <PageHeader title="开发调试" description="企业内部测试与升级通道验证。" />
+        <DeveloperDebugPage />
       </>
     )
   } satisfies Record<AppPage, React.ReactNode>
@@ -205,20 +245,42 @@ function App(): React.JSX.Element {
           colorText: themeMode === 'dark' ? '#e2e8f0' : '#1a1a1a',
           colorTextSecondary: themeMode === 'dark' ? '#94a3b8' : '#6b7280',
           colorTextTertiary: themeMode === 'dark' ? '#64748b' : '#9ca3af',
-          boxShadow: themeMode === 'dark' ? '0 2px 12px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.4)' : '0 2px 12px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.06)',
-          boxShadowSecondary: themeMode === 'dark' ? '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.4)' : '0 8px 32px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.06)',
-          fontFamily: "'Mi Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif"
+          boxShadow:
+            themeMode === 'dark'
+              ? '0 2px 12px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.4)'
+              : '0 2px 12px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.06)',
+          boxShadowSecondary:
+            themeMode === 'dark'
+              ? '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.4)'
+              : '0 8px 32px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.06)',
+          fontFamily:
+            "'Mi Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif"
         }
       }}
     >
       <AntApp>
         <ErrorBoundary>
-          <MainLayout activePage={activePage} sidebar={sidebar} onPageChange={setActivePage}>
-            <Space direction="vertical" size={20} className="content-stack">
+          <MainLayout
+            activePage={activePage}
+            sidebar={sidebar}
+            showDeveloperDebug={showDeveloperDebug}
+            onPageChange={setActivePage}
+          >
+            <Space
+              direction="vertical"
+              size={20}
+              className={`content-stack${activePage === 'storage' ? ' storage-content-stack' : ''}`}
+            >
               {pageContent[activePage]}
             </Space>
           </MainLayout>
-          <ConnectionModal open={connections.modalOpen} onCancel={() => connections.setModalOpen(false)} onSubmit={connections.create} />
+          <ConnectionModal
+            open={connections.modalOpen}
+            connection={connections.editingConnection}
+            onCancel={connections.closeModal}
+            onCreate={connections.create}
+            onUpdate={connections.update}
+          />
         </ErrorBoundary>
       </AntApp>
     </ConfigProvider>

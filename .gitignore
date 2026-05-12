@@ -2,6 +2,10 @@ node_modules
 dist
 out
 release
+release-*
 .DS_Store
 .eslintcache
 *.log*
+*.tsbuildinfo
+.claude/
+index.js
