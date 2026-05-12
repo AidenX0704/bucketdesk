@@ -1,14 +1,29 @@
 {
-  "name": "minio-client",
-  "version": "1.0.0",
-  "description": "Desktop object storage client for MinIO and S3-compatible services",
+  "name": "bucketdesk",
+  "version": "0.1.0",
+  "description": "Desktop object storage manager for S3-compatible services, MinIO, Aliyun OSS, and Tencent COS",
   "main": "./out/main/index.js",
-  "author": "MinIO Client Team",
-  "homepage": "https://github.com/your-org/minio-client",
+  "author": "AidenX0704",
+  "license": "MIT",
+  "homepage": "https://github.com/AidenX0704/bucketdesk",
+  "bugs": {
+    "url": "https://github.com/AidenX0704/bucketdesk/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/minio-client.git"
+    "url": "git+ssh://git@github.com/AidenX0704/bucketdesk.git"
   },
+  "keywords": [
+    "object-storage",
+    "s3",
+    "minio",
+    "aliyun-oss",
+    "tencent-cos",
+    "electron",
+    "react",
+    "typescript",
+    "desktop-app"
+  ],
   "scripts": {
     "icons": "python scripts/generate-icons.py",
     "format": "prettier --write .",

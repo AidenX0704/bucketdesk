@@ -42,7 +42,7 @@ export function MainLayout({
             </div>
             <div>
               <Typography.Text strong className="sidebar-brand-title">
-                MinIO Cloud
+                BucketDesk
               </Typography.Text>
               <Typography.Text className="sidebar-brand-subtitle">多云对象存储管理</Typography.Text>
             </div>

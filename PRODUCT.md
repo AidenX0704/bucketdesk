@@ -10,7 +10,7 @@ Developers, operations engineers, platform engineers, and other technical users 
 
 ## Product Purpose
 
-MinIO Client is a desktop object storage manager for MinIO and S3-compatible cloud storage. It helps users connect to multiple providers, browse buckets and objects, upload and download files, preview supported formats, manage folders, and perform copy, move, rename, delete, and presigned-link operations with clear feedback and low friction.
+BucketDesk is a desktop object storage manager for S3-compatible services, MinIO, Aliyun OSS, and Tencent COS. It helps users connect to multiple providers, browse buckets and objects, upload and download files, preview supported formats, manage folders, and perform copy, move, rename, delete, and presigned-link operations with clear feedback and low friction.
 
 ## Brand Personality
 
